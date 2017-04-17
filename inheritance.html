@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>fixed position</title>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<style type="text/css">
+		body{
+			text-align: center;
+		}
+		.bar-left{
+			float: left;
+			width: 200px;
+			min-height: 90px;
+			overflow-y: scroll;
+		}
+		.nav{
+			margin:0;
+			padding: 0;
+			background-color: yellow;
+			width: 100%;
+
+		}
+		.main-body{
+			float: left;
+			background: red;
+			padding: 0;
+		}
+		.fix-bottom{
+			position: fixed;
+			bottom: 0;
+			margin-top: 30px;
+			background: olive;
+			padding: 5px 10px;
+		}
+		.outer{
+			width: 300px;
+			border: 1px solid olive;
+			margin: 0 auto;
+			background-color: #ccc;
+			padding: 20px;
+			display: inline-block;
+		}
+		.outer div{
+			float: left;
+			height: 100px;
+			width: 100px;
+			background: #fefefe;
+			border: 1px solid green;
+		}
+		</style>
+	</head>
+	<body>
+		<!-- <header></header>
+		<section>
+		<sidebar class="bar-left">
+			<div class="nav">
+				<div>First Demo</div>
+				<div>Second Demo</div>
+				<div>Thirdm Demo</div>
+			</div>
+			<div class="fix-bottom">
+				Bottom Nav
+			</div>
+		</sidebar>
+		<section class="main-body">
+			Main Body
+		</section>
+		</section> -->
+		<section class="outer">
+			<div class=""></div>
+		</section>
+		<script type="text/javascript">
+			 // 声明 Animal 对象构造器
+		 function Animal() { 
+		 } 
+		 // 将 Animal 的 prototype 属性指向一个对象，
+		 // 亦可直接理解为指定 Animal 对象的原型
+		 Animal.prototype = { 
+		    name: "animal", 
+		    weight: 0, 
+		    eat: function() { 
+		        alert( "Animal is eating!" ); 
+		    } 
+		 } 
+		 // 声明 Mammal 对象构造器
+		 function Mammal() { 
+		    this.name = "mammal"; 
+		 } 
+		 // 指定 Mammal 对象的原型为一个 Animal 对象。
+		 // 实际上此处便是在创建 Mammal 对象和 Animal 对象之间的原型链
+		 Mammal.prototype = new Animal(); 
+
+		 // 声明 Horse 对象构造器
+		 function Horse( height, weight ) { 
+		    //this.name = "horse"; 
+		    console.log(this.name);
+		    this.height = height; 
+		    this.weight = weight; 
+		 } 
+		 // 将 Horse 对象的原型指定为一个 Mamal 对象，继续构建 Horse 与 Mammal 之间的原型链
+		 Horse.prototype = new Mammal(); 
+
+		 // 重新指定 eat 方法 , 此方法将覆盖从 Animal 原型继承过来的 eat 方法
+		 Horse.prototype.eat = function() { 
+		    alert( "Horse is eating grass!" ); 
+		 } 
+		 // 验证并理解原型链
+		 var horse = new Horse( 100, 300 ); 
+		 console.log( horse.__proto__ === Horse.prototype ); 
+		 console.log( Horse.prototype.__proto__ === Mammal.prototype ); 
+		 console.log( Mammal.prototype.__proto__ === Animal.prototype );
+
+		/*继承 start*/
+		 function Parent(hello){
+		    this.hello = hello;
+		  }
+		  Parent.prototype.sayHello = function(){
+		    console.log("sayHello:"+this.hello);
+		  }
+
+		  function Child(hello,world){
+		    Parent.call(this,hello);//将父类的属性继承过来，注意这里继承的是父类的属性，不能继承父类的原型属性
+		    this.world = world;//新增一些属性
+		  }
+
+		  Child.prototype = new Parent();//将父类的方法继承过来
+
+		  Child.prototype.sayWorld = function(){//新增一些方法
+		    console.log("sayWorld:"+this.world);
+		  }
+		  console.log("***********************call 和prototype结合实现的继承***********************");
+		  var c = new Child("zhangsan","lisi");
+		  c.sayHello();
+		  c.sayWorld();
+		  console.log("\n\n");
+		  /*继承 end*/
+
+		  /*call 继承 start*/
+		  function Animal(type){
+		  	this.type=type;
+		  	this.shout=function(){
+		  		console.log("shout out:" + this.type);
+		  	}
+		  }
+		  function Dog(type,food){
+		  	this.food = food;
+		  	//Animal.call(this,type);//apply类似的，只是第二个参数要改下
+		  	Animal.apply(this,[type]);
+		  	this.eat=function(){
+		  		console.log("Dogs eat "+ this.food);
+		  	}
+		  }
+		  console.log("************call/apply继承***************");
+		  var dog=new Dog('wangwang~~~~','bones');
+		  dog.shout();
+		  dog.eat();
+		  console.log("\n\n");
+		  /*call继承end*/
+
+		  /**************对象冒充实现的继承 start*****************/
+		  function Plants(color){
+		  	this.color=color;
+		  	this.looks=function(){
+		  		console.log("Most color is "+ this.color);
+		  	}
+		  }
+		  function Rose(color,smell){
+		  	this.method=Plants;
+		  	this.smell=smell;
+		  	this.method(color);
+		  	delete this.method;
+		  	this.smells=function(){
+		  		console.log("smells like "+this.smell);
+		  	}
+		  }
+		  console.log("************对象冒充继承***************");
+		  var plant=new Rose('red','orange');
+		  plant.looks();
+		  plant.smells();
+		  console.log("\n\n");
+		   /**************对象冒充实现的继承 end*****************/
+		</script>
+	</body>
+</html>

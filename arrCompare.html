@@ -1,0 +1,74 @@
+<!doctype <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+   function compareArray(arrA, arrB) {
+        var same = 1;
+        var getA = [],
+            getB = [];
+        if (!!arrA && !!arrB && (arrA.length == arrB.length)) {
+            for (var m = 0, Alen = arrA.length; m < Alen; m++) {
+                getA.push(arrA[m]);
+            }
+            for (var n = 0, Blen = arrB.length; n < Blen; n++) {
+                getB.push(arrB[n]);
+            }
+            var l = getA.length;
+            for (var i = 0; i < l; i++) {
+                if (!same) {
+                    break;
+                }
+                for (var j = 0; j < l; j++) {
+                    if ($.type(getA[i]) == $.type(getB[j])) {
+                        if ($.type(getA[i]) == "object") {
+                            var xcount = 1,
+                                x_count = 1,
+                                ycount = 1;
+                            for (var x in getA[i]) {
+                                xcount += 1;
+                                if (getA[i][x] == getB[j][x]) {
+                                    x_count += 1;
+                                }
+                            }
+                            for (var y in getB[j]) {
+                                ycount += 1;
+                            }
+
+                            if (xcount == x_count && xcount == ycount) {
+                                getB.splice(j, 1);
+                                getA.splice(i, 1);
+                                i--;
+                                l--;
+                                break;
+                            }
+                        } else if (getA[i] == getB[j]) {
+                            getB.splice(j, 1);
+                            getA.splice(i, 1);
+                            i--;
+                            l--;
+                            break;
+                        }
+                    }
+
+                    if (j == l - 1) {
+                        same = 0;
+                        break;
+                    }
+
+                }
+            }
+        } else if (!arrA && !arrB) {
+            same = 1;
+        } else {
+            same = 0;
+        }
+        return same;
+    }
+</script>
+</body>
+</html>
+ 

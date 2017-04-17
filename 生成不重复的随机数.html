@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>test</title>
+	</head>
+	<body>
+		<div id="container">
+			<p>函数fn生成一个长度为n的数组,数组每一项介于[2,32]之间,且数组不重复</p>
+		</div>
+		<input type="text" id="js_num" placeholder="输入n的值" />
+		<button id="calculate">点击生成结果</button>
+		<p id="result"></p>
+	<script type="text/javascript">
+	function fn(n){
+		if(Number.isNaN(n) || !(Number.isInteger(n) || Number.isInteger(+n))){
+			console.warn("类型有误")
+			return []
+		}
+		if(n > 31 || n < 0){
+			console.error('越界了')
+			return []
+		}
+		var arr = []
+		var list = []
+		var len = 31
+		for(var i = 0 ; i < 31 ; i++){
+			arr.push(i+2)
+		}
+		for(var j = 0; j < n; j++){
+			var  randomIndex = Math.floor(Math.random()*len)
+			var randomItem = arr.splice(randomIndex,1)
+			len--
+			list.push(randomItem[0])
+		}
+		console.log(list)
+		return list;
+	}
+	var inputDom = document.getElementById('js_num')
+	var resultDom = document.getElementById('result')
+	document.getElementById('calculate').onclick = function(){
+		var value = inputDom.value
+		var result = fn(value)
+		result = result.join(' ')
+		resultDom.innerHTML = '结果为:' + result
+	}
+	</script>
+	</body>
+
+</html>

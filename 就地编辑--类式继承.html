@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>类式继承----就地编辑</title>
+	</head>
+		<body>
+			<p id="parent"><span id="test">单行文本编辑</span></p>
+			<p id="m_parent"><span id="m_test">多行文本编辑</span></p>
+			<script type="text/javascript">
+			function extend(subClass,superClass) {
+				var F = function(){}//用空函数初始化,避免生成父类的副本
+				F.prototype = superClass.prototype
+				subClass.prototype = new F()
+				subClass.prototype.constructor = subClass
+				subClass.superclass = superClass.prototype//用来弱化子类与父类之间名称的耦合
+				if(superClass.prototype.constructor == Object.prototype.constructor){//超类是Object本身
+					superClass.prototype.constructor = superClass
+				}
+
+			}
+			function EditInPlaceFiled(id,parent,defaultvalue){
+				this.id = id
+				this.parent = parent
+				this.value = defaultvalue || document.getElementById(id).innerHTML || ''
+				this.staticElement = document.getElementById(id)
+				this.createElements(id)
+				this.addEvents()
+			}
+			EditInPlaceFiled.prototype = {
+				createElements:function(id){
+					this.editContainer = document.createElement('div')
+					this.editContainer.style.display = 'none'
+					this.parent.appendChild(this.editContainer)
+
+					this.filedPlace = document.createElement('input')
+					this.filedPlace.type = 'text'
+					this.filedPlace.value = this.value
+					this.filedPlace.className = 'input_text'
+
+					this.saveButton = document.createElement('input')
+					this.saveButton.type = 'button'
+					this.saveButton.value = 'save'
+					this.saveButton.className = 'btn'
+
+					this.cancelButton = document.createElement('input')
+					this.cancelButton.type = 'button'
+					this.cancelButton.value = 'cancel'
+					this.cancelButton.className = 'btn'
+
+					this.editContainer.appendChild(this.filedPlace)
+					this.editContainer.appendChild(this.saveButton)
+					this.editContainer.appendChild(this.cancelButton)
+				},
+				addEvents:function(){
+					var that= this
+					this.addEvent(this.staticElement,'click',function(){
+						that.convertToEdit()
+					})
+					this.addEvent(this.saveButton,'click',function(){
+						that.saveEdit()
+					})
+					this.addEvent(this.cancelButton,'click',function(){
+						that.cancelEdit()
+					})
+				},
+				convertToEdit:function(){
+					this.editContainer.style.display = 'block'
+					this.staticElement.style.display = 'none'
+				},
+				saveEdit:function() {
+					this.editContainer.style.display = 'none'
+					this.staticElement.style.display = 'block'
+					this.staticElement.innerHTML = this.getValue();
+				},
+				cancelEdit:function() {
+					this.editContainer.style.display = 'none'
+					this.staticElement.style.display = 'block'
+				},
+				addEvent:function(elem,event,callback){
+					if(elem.attachEvent){
+						elem.attachEvent(event,callback)
+					}else if(elem.addEventListener){
+
+						elem.addEventListener(event,function(argument) {
+							callback ? callback.apply(this):null
+						})
+					}
+				},
+				getValue:function(argument) {
+					return this.filedPlace.value
+				}
+
+			}
+			//多行文本编辑
+			function EditInPlaceArea(id,parent,defaultvalue){
+				EditInPlaceArea.superclass.constructor.call(this,id,parent,defaultvalue)
+			}
+			extend(EditInPlaceArea,EditInPlaceFiled)
+			EditInPlaceArea.prototype.createElements = function(id){
+				this.editContainer = document.createElement('div')
+				this.editContainer.style.display = 'none'
+				this.parent.appendChild(this.editContainer)
+
+				this.filedPlace = document.createElement('textarea')
+				this.filedPlace.value = this.value
+				this.filedPlace.className = 'input_area'
+
+				this.saveButton = document.createElement('input')
+				this.saveButton.type = 'button'
+				this.saveButton.value = 'save'
+				this.saveButton.className = 'btn'
+
+				this.cancelButton = document.createElement('input')
+				this.cancelButton.type = 'button'
+				this.cancelButton.value = 'cancel'
+				this.cancelButton.className = 'btn'
+
+				this.editContainer.appendChild(this.filedPlace)
+				this.editContainer.appendChild(this.saveButton)
+				this.editContainer.appendChild(this.cancelButton)
+			}
+			var testEditPlace = new EditInPlaceFiled('test',document.getElementById('parent'))
+			var testMEditPlace = new EditInPlaceArea('m_test',document.getElementById('m_parent'))
+			</script>
+			<style type="text/css">
+			.input_text{
+				padding: 3px 5px;
+				border: 1px solid #eee;
+			}
+			.btn{
+				background: #337ab7;
+				padding: 3px 5px;
+				color: #000;
+				font-size: 12px;
+				border: 1px solid #ccc;
+			}
+			</style>
+		</body>
+	</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>限制输入框的字符个数</title>
+	</head>
+	<body>
+		<textarea id="textarea"></textarea>
+		<textarea id="origin"></textarea>
+		<script type="text/javascript" src="jquery-2.1.4.js"></script>
+		<script type="text/javascript">
+		//jQuery方法
+		jQuery.fn.maxLength = function(max){
+			this.each(function(){
+				var type = this.tagName.toLowerCase();
+				var inputType = this.type ? this.type.toLowerCase():null;
+				if(type == 'input' && inputType == 'text' || inputType == 'password'){
+					this.maxLength = max;
+				}else if(type == 'textarea'){
+					this.onkeypress=function(e){
+						var ob = e||event;
+						var keyCode = ob.keyCode;
+						console.log('keyCode:',keyCode)
+						var hasSelection = document.selection?document.selection.createRange().text.length > 0 : this.selectionStart != this.selectionEnd;
+						return !(this.value.length >= max && (keyCode > 32 || keyCode == 32||keyCode == 0 ||keyCode == 13)&&!ob.ctrlKey && !ob.altKey && !hasSelection);
+					}
+					this.onkeyup = function(){
+						if(this.value.length > max){
+							this.value = this.value.substring(0,max);
+						}
+					}
+				}
+			});
+		}
+		//不依赖于jQuery的方法
+		function Max($doms,max){
+			$doms.each(function(){
+				var type = this.tagName.toLowerCase();
+				var inputType = this.type ? this.type.toLowerCase():null;
+				if(type == 'input' && inputType == 'text' || inputType == 'password'){
+					this.maxLength = max;
+				}else if(type == 'textarea'){
+					this.onkeypress=function(e){
+						var ob = e||event;
+						var keyCode = ob.keyCode;
+						var hasSelection = document.selection?document.selection.createRange().text.length > 0 : this.selectionStart != this.selectionEnd;
+						return !(this.value.length >= max && (keyCode >32 || keyCode == 32||keyCode == 0 ||keyCode == 13)&&!ob.ctrlKey && !ob.altKey && !hasSelection);
+					}
+					this.onkeyup = function(){
+						if(this.value.length > max){
+							this.value = this.value.substring(0,max);
+						}
+					}
+				}
+			});
+		}
+		$('#textarea').maxLength(10);//jQuery方法
+		Max($('#origin'),10);
+		</script>
+	</body>
+</html>

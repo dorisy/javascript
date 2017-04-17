@@ -1,0 +1,83 @@
+ <html>
+<meta charset="utf-8">
+<title>内嵌滑鼠</title>
+
+
+<style>
+    #drag-box {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: black;
+        left: 0;
+        top: 0;
+        z-index: 1;
+    }
+    #parent{
+        position: relative;
+        width: 600px;
+        height: 200px;
+        background-color: red;
+        margin:10px auto;
+    }
+</style>
+
+
+<body>
+<div id="parent">
+    <div id="drag-box">
+
+    </div>
+</div>
+<script type="text/javascript">
+    var oDiv = document.getElementById("drag-box");
+    var oParent = document.getElementById("parent");
+
+    var disX = 0;
+    var disY=0;
+    oDiv.onmousedown=function (e)
+    {
+        var oEvent = e||event;
+        disX=oEvent.clientX-oDiv.offsetLeft;
+        disY=oEvent.clientY-oDiv.offsetTop;
+        document.onmousemove=function(e)
+        {
+            var oEvent=e||event;
+            var left=oEvent.clientX-disX;
+            var top=oEvent.clientY-disY;
+            if (left<0) {
+                left=0;
+            }
+             if (top<0) {
+                top=0;
+            }
+            if (left>oParent.offsetWidth-oDiv.offsetWidth) {
+                left=oParent.offsetWidth-oDiv.offsetWidth;
+            }
+            if (top>oParent.offsetHeight-oDiv.offsetHeight) {
+                top=oParent.offsetHeight-oDiv.offsetHeight;
+            }
+            oDiv.style.left=left+'px';
+            oDiv.style.top=top+'px';
+
+        };
+		document.onmouseup=function(){
+            document.onmousemove=null;
+            document.onmouseup=null;
+        }
+        
+    };
+    function paddingUrl(http,domain,path){
+    	console.log(domain);
+    	return http+domain+'/'+path;
+    }
+    var paths=['touassistant','tourleader','tour'];
+    var newPath=paths.map(paddingUrl.bind(null,'http://','m.ctrip.com'));
+    // var newPath=paths.map(function(path){
+    // 	//paddingUrl.bind("http://",'m.ctrip.com');
+    // 	return paddingUrl("http://",'m.ctrip.com',path);
+    // });
+    console.log(newPath);
+</script>
+</body>
+</html>

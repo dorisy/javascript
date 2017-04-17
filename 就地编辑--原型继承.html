@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>原型继承----就地编辑</title>
+	</head>
+	<body>
+		<p id="parent"><span id="test">单行文本编辑</span></p>
+		<p id="m_parent"><span id="m_test">多行文本编辑</span></p>
+	<script type="text/javascript">
+	function clone(superClass){
+		var F = function(){}
+		F.prototype = superClass
+		return new F
+	}
+	var EditInPlaceFiled = {
+			configure:function(id,parent,defaultvalue){
+				this.id = id
+				this.parent = parent
+				this.value = defaultvalue || document.getElementById(id).innerHTML || ''
+				this.staticElement = document.getElementById(id)
+				this.createElements(id)
+				this.addEvents()
+			},
+			createElements:function(id){
+				this.editContainer = document.createElement('div')
+				this.editContainer.style.display = 'none'
+				this.parent.appendChild(this.editContainer)
+
+				this.filedPlace = document.createElement('input')
+				this.filedPlace.type = 'text'
+				this.filedPlace.value = this.value
+				this.filedPlace.className = 'input_text'
+
+				this.saveButton = document.createElement('input')
+				this.saveButton.type = 'button'
+				this.saveButton.value = 'save'
+				this.saveButton.className = 'btn'
+
+				this.cancelButton = document.createElement('input')
+				this.cancelButton.type = 'button'
+				this.cancelButton.value = 'cancel'
+				this.cancelButton.className = 'btn'
+
+				this.editContainer.appendChild(this.filedPlace)
+				this.editContainer.appendChild(this.saveButton)
+				this.editContainer.appendChild(this.cancelButton)
+			},
+			addEvents:function(){
+				var that= this
+				this.addEvent(this.staticElement,'click',function(){
+					that.convertToEdit()
+				})
+				this.addEvent(this.saveButton,'click',function(){
+					that.saveEdit()
+				})
+				this.addEvent(this.cancelButton,'click',function(){
+					that.cancelEdit()
+				})
+			},
+			convertToEdit:function(){
+				this.editContainer.style.display = 'block'
+				this.staticElement.style.display = 'none'
+			},
+			saveEdit:function() {
+				this.editContainer.style.display = 'none'
+				this.staticElement.style.display = 'block'
+				this.staticElement.innerHTML = this.getValue();
+			},
+			cancelEdit:function() {
+				this.editContainer.style.display = 'none'
+				this.staticElement.style.display = 'block'
+			},
+			addEvent:function(elem,event,callback){
+				if(elem.attachEvent){
+					elem.attachEvent(event,callback)
+				}else if(elem.addEventListener){
+
+					elem.addEventListener(event,function(argument) {
+						callback ? callback.apply(this):null
+					})
+				}
+			},
+			getValue:function(argument) {
+				return this.filedPlace.value
+			}
+		}
+		var titleEdit = clone(EditInPlaceFiled)
+		titleEdit.configure('test',document.getElementById('parent'))
+		var EditInPlaceArea = clone(EditInPlaceFiled)
+		EditInPlaceArea.createElements = function(id){
+			this.editContainer = document.createElement('div')
+			this.editContainer.style.display = 'none'
+			this.parent.appendChild(this.editContainer)
+
+			this.filedPlace = document.createElement('textarea')
+			this.filedPlace.value = this.value
+			this.filedPlace.className = 'input_area'
+
+			this.saveButton = document.createElement('input')
+			this.saveButton.type = 'button'
+			this.saveButton.value = 'save'
+			this.saveButton.className = 'btn'
+
+			this.cancelButton = document.createElement('input')
+			this.cancelButton.type = 'button'
+			this.cancelButton.value = 'cancel'
+			this.cancelButton.className = 'btn'
+
+			this.editContainer.appendChild(this.filedPlace)
+			this.editContainer.appendChild(this.saveButton)
+			this.editContainer.appendChild(this.cancelButton)
+		}
+		var testMEditPlace = clone(EditInPlaceArea)
+		testMEditPlace.configure('m_test',document.getElementById('m_parent'))
+	</script>
+	</body>
+</html>

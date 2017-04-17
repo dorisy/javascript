@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>斐波那契---for&递归</title>
+	</head>
+	<body>
+	<p>for的性能比递归好,并且直观一些,便于理解</p>
+	<p>用递归实现斐波那契,要用尾递归,否则容易出现堆栈溢出的现象,试了一下到一定值也是会溢出的,说起来还是for循环的效率好些</p>
+	<script type="text/javascript">
+	function fibo(n,fibo1,fibo2){
+		var c = fibo1 + fibo2
+		if(n == 1) return fibo1
+		if(n == 2) return fibo2
+		for(var i = 3; i <= n; i++){
+			c = fibo1 + fibo2
+			fibo1 = fibo2
+			fibo2 = c
+		}
+		return c
+	}
+	function fibo_digui(n,fibo1,fibo2){
+		if(n == 1) return fibo1
+		if(n == 2) return fibo2
+		return fibo_digui(n-1,fibo2,fibo1 + fibo2)
+	}
+	console.log("for 实现的斐波那契:",fibo(1000000,1,1))
+	//console.log("递归 实现的斐波那契:",fibo_digui(100000,1,1))//堆栈溢出
+	</script>
+	</body>
+</html>

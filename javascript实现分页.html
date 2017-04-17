@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>简单分页</title>
+		<style type="text/css">
+			a{
+				cursor: pointer;
+			}
+			.js_pagenation{
+				color: #1d58d1;
+				padding: 5px;
+			}
+			.js_pagenation.cur{
+				color: red;
+			}
+			.js_prev_page,.js_next_page{
+				border: 1px solid grey;
+				padding: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="demo1" class="section">
+			
+		</div>
+		<script type="text/javascript">
+			function showPages(page,total){
+				var rangeStart,rangeEnd
+				page = (+page)
+				total = (+total)
+				rangeStart = page
+				rangeEnd = page
+				if(page > total){
+					page = total
+					rangeEnd = page
+				}
+				var str = '<a class="js_pagenation js_first_page ' + (page == 1 ? 'cur' :'') +'">1</a>'//cur page
+				var i = 0
+				rangeStart = page > 4 ? page - 3 : 2 //起始下标要么是当前页码减3,要么就从第二项开始
+				rangeEnd = total - page > 3 ? page + 3 : total - 1 //结束下标要么是当前页码+3,要么就是倒数第二项
+				if(page > 5){
+					str = str + '...'
+				}
+				for(i = rangeStart; i <= rangeEnd; i++){
+					if(i == page){
+						str += '<a class="js_pagenation cur">' + i + '</a>'
+					}else{
+						str += '<a class="js_pagenation">' + i + '</a>'
+					}
+				}
+				if(total - page > 3){
+					str = str + '...'
+				}
+				str += '<a class="js_pagenation js_last_page ' + (page == total ? 'cur':'') + '">' + total + '</a>'//last page
+
+				//前一页,后一页按钮
+				if(page > 1){//当前页不是第一页,需要显示上一页
+					str = '<a class="js_pagenation js_prev_page" data-index="' + (page -1) + '">上一页</a>' +  str
+				}
+				if(page < total){//当前页不是最后一页,需要显示下一页
+					str += '<a class="js_pagenation js_next_page" data-index="' + (page + 1) + '">下一页</a>'
+				}
+				return str
+			}
+			function getElemementsByClass(klass){//根据class查找dom
+				var all = document.querySelectorAll('a')
+				var i = 0
+				var ret = []
+				for(;i < all.length; i++){
+					if(all[i].getAttribute('class').indexOf(klass) >= 0){
+						ret.unshift(all[i])
+					}
+				}
+				return ret
+			}
+			var wrapper = document.getElementById('demo1')
+			var pageText = showPages(5,50)
+			wrapper.innerHTML = pageText
+			document.getElementById('demo1').addEventListener('click',function(e){
+				var target = e.target || e.srcElement
+				if(target.getAttribute('class').indexOf('js_next_page') >= 0 ||target.getAttribute('class').indexOf('js_prev_page') >= 0){
+					wrapper.innerHTML = showPages(target.getAttribute('data-index'),50)
+				}else if(target.getAttribute('class').indexOf('js_pagenation') >= 0){
+					wrapper.innerHTML = showPages(target.innerHTML,50)
+				}
+			})
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>test</title>
+	</head>
+	<body>
+		<div id="container"></div>
+	<script type="text/javascript">
+	var str1 = '微领队是全球仅限旅行中小伙伴的专属领地'
+	var str2 = '加入旅友同行群，这里有你的微领队（当地人）和同行旅友，旅行中大到怎么更好玩，小到查找shopping mall 某楼层的厕所，都可以在群里找领队或跟同行旅友交流。'
+	var container = document.getElementById('container')
+	var len1 = str1.length
+	var index1 = 0
+	var len2 = str2.length
+	var index2 = 0
+	var timeout
+	function showFirstpage(){
+		if(container.innerHTML.length == len1){
+			setTimeout(function(){
+				container.innerHTML = ''
+				showSecondpage()
+			},200)
+		}
+		index1++
+		container.innerHTML = str1.substring(0,index1)
+		timeout = setTimeout(showFirstpage,100)
+	}
+	function showSecondpage(){
+		console.log(container.innerHTML)
+		clearTimeout(timeout)
+		if(container.innerHTML.length == len2){
+			clearTimeout(timeout)
+			return
+		}
+		index2++
+		container.innerHTML = str2.substring(0,index2)
+		timeout = setTimeout(showSecondpage,100)
+	}
+	showFirstpage()
+	</script>
+	</body>
+
+</html>

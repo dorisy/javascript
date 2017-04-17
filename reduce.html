@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>reduce用法</title>
+	</head>
+	<body>
+		<div id="container"></div>
+	<script type="text/javascript">
+		var list = [9,2,6,8,9,6,5,3,5]
+		var str = "测试测试测试ioioioio333啊啊"
+		if(typeof Array.prototype.reduce != 'function'){//如果浏览器不兼容这种写法,自己处理
+			Array.prototype.reduce = function(callback,initialValue){
+				var previous = initialValue, k = 0 ,len = this.length;
+				if(typeof initialValue == 'undefined'){
+					previous = this[0]
+					k = 1
+				}
+				if(typeof callback == 'function'){
+					for(k; k <len; k++){
+						this.hasOwnProperty(k) && (previous = callback(previous,this[k],k,this))//每次执行callback后要更新previous
+					}
+				}
+				return previous
+			}
+		}
+		if(typeof Array.prototype.reduceRight != 'function'){//如果浏览器不兼容这种写法,自己处理
+			Array.prototype.reduceRight = function(callback,initialValue){
+				var previous = initialValue, len = this.length,k = len-1;
+				if(typeof initialValue == 'undefined'){
+					previous = this[len-1]//没有初始值时,previous的值为最后一项的值
+					k = len-2//没有初始值时,数组从倒数第二项开始遍历
+				}
+				if(typeof callback == 'function'){
+					for(k; k >= 0; k--){
+						this.hasOwnProperty(k) && (previous = callback(previous,this[k],k,this))//每次执行callback后要更新previous
+					}
+				}
+				return previous
+			}
+		}
+		function splitCopy (list) {
+			var arr = []
+			list.reduce(function(prev,cur){
+				prev[cur] ? '' : (prev[cur] = true,arr.push(cur))
+				return prev
+			},{})
+			return arr.join('')
+		}
+		console.log("原字符串：",str)
+		console.log("去重结果：",splitCopy(str.split('')))
+
+
+		/*计算成绩*/
+		var result = [
+	    {
+	        subject: 'math',
+	        score: 88
+	    },
+	    {
+	        subject: 'chinese',
+	        score: 95
+	    },
+	    {
+	        subject: 'english',
+	        score: 80
+	    }
+		];
+		var sum = result.reduce(function(prev,cur){
+			return prev + cur.score
+		},0)
+		console.log("总成绩：",sum)
+
+		var dis = {
+		    math: 0.5,
+		    chinese: 0.3,
+		    english: 0.2
+		}
+		var qsum = result.reduceRight(function(prev,cur){
+			return prev + cur.score*dis[cur.subject]
+		},0)
+		console.log("加权总成绩：",qsum)
+
+		console.log("============数组扁平化================")
+		var flattenArr = [
+			[[1,2]],
+			[3,[4,5]],
+			[6,[7,[8,[9,[10]]]]]
+		]
+		function flatten(arr){
+			return arr.reduce(function(prev,cur){
+				return prev.concat(Array.isArray(cur) ? flatten(cur) : cur)
+			},[])
+		}
+		console.log(flatten(flattenArr))
+	</script>
+	</body>
+
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>  
+ <html>  
+    <head>  
+        <meta charset="utf-8"/>
+        <title>window.name 跨域</title>   
+        <script type="text/javascript">  
+            function getData(){
+                var iframe=document.getElementById('proxy');//
+                iframe.onload=function(){//当前页面已经和数据源页面同源了，可以相互访问
+                    var data=iframe.contentWindow.name;//获取iframe里的window.name,也就是cross-origin-data.html页面给它设置的参数
+                    alert(data);
+                }
+                iframe.src="about:blank";//这个地方的src的值为随便的一个页面，只要与当前页面同源就可以了，目的是让当前页面可以访问到iframe里的东西，也可以设置成about:blank
+            }
+        </script>  
+    </head>  
+    <body>  
+      <iframe id="proxy" src="http://10.32.225.2:9090/javascript/javascript/cross-origin-data.html" style="display:none;" onLoad="getData()"></iframe>
+    </body>  
+</html>>

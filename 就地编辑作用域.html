@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>无标题文档</title>
+		<script type="text/javascript">
+		// JavaScript Document
+		var Deditor=(
+		function(){
+		//private methods
+		function addEvent(elem,type,handler){
+		if(!+"\v1"){//IE
+		elem[type+handler.toString()]=handler;
+		elem.attachEvent("on"+type,function(){
+		elem[type+handler.toString()](); });}
+		else elem.addEventListener(type,handler,false);
+		}//兼容事件绑定
+		function fixEvent(e){
+		e.preventDefault=function(){return this.returnValue=false;};
+		e.stopPropagation=function(){return this.cancelBubble=true;};
+		return e;
+		}//event兼容
+		function createEditorFile(){
+		var span=document.createElement("span");
+		span.id="directEditorSpan";
+		var textFile=document.createElement("input");
+		textFile.type="text";
+		textFile.id="directEditorTextFile";
+		var okButton=document.createElement("input");
+		okButton.type="button";
+		okButton.value="save";
+		okButton.id="directEditorOkButton";
+		var cancelButton=document.createElement("input");
+		cancelButton.type="button";
+		cancelButton.value="cancel";
+		cancelButton.id="directEditorCancelButton";
+		span.appendChild(textFile);
+		span.appendChild(okButton);
+		span.appendChild(cancelButton);
+		html=span;
+		elemItems={span:span,textFile:textFile,okButton:okButton,cancelButton:cancelButton};
+		}// 文本编辑框
+		function addEvents(){
+		for(var i=0;i<elems.length;i++){
+		addEvent(elems[i],"click",contextToFile);
+		}
+		var items=elemItems;
+		addEvent(items.okButton,"click",save);
+		addEvent(items.cancelButton,"click",cancel);
+		addEvent(html,"click",function(evt){
+		evt=evt || window.event;
+		if(!+"\v1") evt=fixEvent(evt);
+		evt.stopPropagation();
+		});
+		}//事件添加
+		function fileToContext(){
+		currentElem.removeChild(html);
+		currentElem.innerHTML=currentContext;
+		currentContext=null;
+		currentElem=null;
+		}//编辑转文本
+		function contextToFile(evt){
+		if(currentElem) fileToContext();
+		evt=evt || window.event;
+		currentElem=evt.srcElement || evt.target;
+		currentContext=currentElem.innerHTML;
+		elemItems["textFile"].value=currentContext;
+		currentElem.innerHTML="";
+		currentElem.appendChild(html);
+		html.style.display="block";
+		}//文本转编辑
+		function save(){
+		var value=elemItems["textFile"].value;
+		if(request("post",url,value))
+		currentElem.innerHTML=value;
+		fileToContext();
+		}//保存结果
+		function cancel(){
+		fileToContext();
+		}//放弃保存
+		function addLinkCss(cssHref){
+		var link=document.createElement("link");
+		link.href=cssHref;
+		link.type="text/css";
+		link.rel="stylesheet";
+		document.getElementsByTagName("head")[0].appendChild(link);
+		}
+		//private arguments
+		var currentContext;
+		var html;
+		//var cssHref;//css样式
+		var url;//AJAX请求
+		var currentElem;
+		var elems=[];
+		var elemItems={};
+		//public
+		return function(elems_arg,saveUrl,linkHref){
+		//设置初始参数
+		url=saveUrl;
+		if(linkHref) addLinkCss(linkHref);
+		if(elems_arg && elems_arg.constructor==Array&& elements.length>0) {
+		elems=elems_arg;
+		createEditorFile();
+		addEvents();
+		}
+		//添加元素和事件
+		this.thenEffect=function(elements){
+		if(elements.constructor==Array && elements.length>0)
+		{elems=elements;
+		createEditorFile();
+		addEvents();}
+		};
+		this.setUrl=function(u){
+		url=u;
+		};
+		this.setCssHref=function(href){
+		addLinkCss(href);
+		};//添加公用方法
+		};
+		}//ann function end
+		)();
+		window.onload=function(){
+		var tds=document.getElementsByTagName("td");
+		var editors=[];
+		for(var i=0;i<tds.length; i++){
+			if((i+1)%2==0)
+			editors.push(tds[i]);
+			}
+			var deditor=new Deditor();
+			deditor.thenEffect(editors);
+			}
+			</script>
+		</head>
+		<body>
+			<style type="text/css">
+			#directEditorSpan input{
+			border:1px solid #ccc;
+			background-color:#fff;
+			color:#696969;
+			float:left;}
+			#info{
+			border-collapse:collapse;
+			}
+			#info td {
+			border:1px solid #ccc;
+			text-align:left;
+			padding-left:10px;
+			line-height:20px;
+			width:100px;
+			font-size:12px;
+			}
+			</style>
+			<table id="info">
+				<tr><td>姓名</td><td>progresstudy</td></tr>
+				<tr><td>年龄</td><td>22</td></tr>
+				<tr><td>职业</td><td>学生</td></tr>
+			</table>
+			</script>
+		</body>
+	</html>

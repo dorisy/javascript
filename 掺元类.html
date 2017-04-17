@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>类式继承----就地编辑</title>
+	</head>
+	<body>
+	<script type="text/javascript">
+	//if(!Array.prototype.reduce){
+		Array.prototype.reduce = function(callback,initialValue){
+			var previous = initialValue
+			var k = 0
+			var length = this.length
+			if(typeof initialValue == 'undefined'){
+				k = 1
+				previous = this[0]
+			}
+			if(typeof callback == 'function'){
+				for(k; k < length; k++){
+					if(this.hasOwnProperty(k)){//兼容类数组的处理方式
+						previous = callback(previous,this[k],k,this)
+					}
+				}
+			}
+			return previous
+		}
+	//}
+	function argument(recieveClass,giveClass){
+		if(arguments[2]){//若指定了参数名
+			for(var i = 2,len = arguments.length;i<len;i++){
+				recieveClass['prototype'][arguments[i]] = giveClass['prototype'][arguments[i]]
+			}
+		}else{
+			for(var methodName in giveClass){
+				recieveClass['prototype'][methodName] = giveClass['prototype'][methodName]
+			}
+		}
+	}
+	var Mixin = function(){}
+	Mixin.prototype = {
+		log:function(){
+			console.log('掺元类测试')
+		},
+		flatten:function(argv) {
+			var that = this
+			if(Array.isArray(argv)){
+				return argv.reduce(function(prev,cur){
+					return prev.concat(Array.isArray(cur) ? that.flatten(cur) : cur)
+				},[])
+			}
+		}
+	}
+	var TestMixin = function(){}
+	argument(TestMixin,Mixin,'flatten')
+	var test = new TestMixin()
+	console.log(test.flatten([1,2,[3,[4]]]))
+	</script>
+	</body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>数据绑定</title>
+		<style type="text/css">
+			.section {
+			box-shadow: 2px 2px 8px rgb(204, 204, 204);
+			padding: 30px;
+			margin: 30px;
+			}
+			label span {
+			width: 80px;
+			display: inline-block;
+			}
+			.green {
+			color: #42b984;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="demo1" class="section">
+			Hello <span class='{{css}}'>{{name}}</span>!
+			<br>
+			<p>now is</p>
+		</div>
+		<script type="text/javascript">
+		function judgePlatform(){
+			var ua = navigator.userAgent.toLowerCase()
+			return {
+				isPad:ua.indexOf('ipad') > -1,
+				isIphone:ua.indexOf('iphone os') > -1,
+				isAndroid:ua.indexOf('android') > -1,
+				isWinPhone:ua.indexOf('widdows mobile') > -1
+			}
+		}
+		console.log(judgePlatform())
+		</script>
+	</body>
+</html>
